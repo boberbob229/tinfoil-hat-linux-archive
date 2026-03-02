@@ -1,0 +1,38 @@
+<html>
+<head><title>Tinfoil Hat linux 2.0 pre-release </title></head>
+<body>
+<h3> Tinfoil hat 2.0 pre-release </h3>
+I finally had a few days free to work on tinfoil hat. All of the code is 
+more than a year old, so it was time to update to new versions of gpg and wipe. While I was at it, I rebuilt almost every other program on the disk.
+<h4> Where is it </h4>
+You can get version 2.0pre1 <A HREF="tinfoil2.img">here</a>. The signature file is <A HREF="tinfoil2.img.asc">here</a>
+
+<h4> So what's new? </h4>
+<ul>
+<li> GPG version 1.2, Wipe version 2.1, loopaes 1.7d, util-linux 2.11z, busybox 1.0-pre1.  Needless to say, 18 months of updates added about 1/3 more bytes to cram on the floppy disk. 
+<li> New random number gathering using <A HREF="http://cvs.pld.org.pl/clrngd/">clrngd</a>. This gathers real randomness from fluctuations of high-frequency clocks on a PC's mainboard. 
+<li> MD5 checks of the system board ROMs thanks to <A HREF="http://www.linuks.mine.nu/ree/">ree</a>. 
+<li> All editors were replaced with <A HREf="http://www.sax.de/~adlibit/">e3</a>. It's not great, it <i>is</i> really small.
+<li> Support for safe viewing of MS Word documents, thanks to strings|more 
+<li> New kernel build with support for all USB chips, ext2, vfat, iso9660 and loop-aes. The kernel is compressed with the <A HREF="http://www.websamba.com/chrissicool">bzip2 patch</a> 
+<li> Minimal support for finding &amp; mounting <A HREF="http://www.knopper.net/knoppix/">knoppix</a> encrypted home partitions. <b>Warning::</b> tinfoilhat doesn't have fsck, so this could make a corrupt ext2 filesystem much worse. 
+<li> First steps for booting from USB keys. <br>
+THL will accept a FLOPPY=dev argument from syslinux. If you know your USB key is /dev/sda1, typing "linux FLOPPY=sda1" at the syslinux prompt  will make THL look for  GPG key info on the USB key instead of the floppy. In theory this &amp; syslinux is all you need to boot from a USB device. In practice most BIOSes are still to fussy to make this worth while. 
+<li> New bugs, mostly because of the changes to msh 
+</ul>
+
+<h4> FAQ</h4>
+The <A HREF="faq.html">old faq</a> is a good place to start. These are FAQs for the testing release:
+<ul>
+<li>Q: Why don't you include the build environment &amp; source?
+<br>A: No matter what some people might think,  there's no security benefit from using my code tree. If you're going to actually review all of the code used to build this, you may as well get it from kernel.org.  I will try to provide all patches & configuration options so it's easy to rebuild on other architectures. 
+<li>Q: When will 2.0 final come out?
+<br>A: Probably in less than 18 months, but maybe not. 
+<li> Q: Why don't you make a CD version?
+<br>A: Time. I may get to it some day. The trick would be finding the CD &amp; the storage device. And avoiding the temptation to bloat into knoppix. 
+<li> Q: How do I report bugs?
+<br> A: anonymous A T nameless. cultists. org . 
+</ul>
+
+</body>
+</html>
