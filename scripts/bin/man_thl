@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ "$1" == "" ]; then
+	echo " try again: man <program name> "
+else
+more /etc/$1.txt
+fi

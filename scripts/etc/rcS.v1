@@ -1,0 +1,57 @@
+#!/bin/sh
+/bin/mount -a
+
+if [ -f /mnt/floppy/entropy.bin ]; then
+	cat /mnt/floppy/entropy.bin >/dev/urandom
+fi
+#BUG, should write back entropy shortly to ensure that 
+#it changes, even if people don't reboot properly. 
+
+echo "2048" > /proc/sys/kernel/random/poolsize 
+L="/dev/loop3"
+# set up encrypted temp
+dd if=/dev/urandom bs=16 count=1 2>/dev/null |md5sum \
+	|losetup -p 0 -e AES128 $L /dev/ram1
+/bin/gunzip -c  /etc/ramdisk1.gz > $L
+mount -o noexec,rw $L /tmp
+
+# get GPG info
+cd /tmp
+if [ -f /mnt/floppy/ring.gpg ]; then
+ mkdir gnupg
+ gpg -o - /mnt/floppy/ring.gpg |tar -xvf -
+else
+ (cd /mnt/floppy/ ; tar -cf - ./gnupg )| tar -xvf -
+ if  [ ! -e /tmp/gnupg/pubring.gpg ]; then
+   gpg --list-keys  2>&1 >/dev/null
+ fi
+fi
+# the NVRAM is kind of clunky, but easy to do. How to 
+# properly MD5 pci firmware?
+b=`md5sum /dev/nvram |cut -f1 -d" " `
+h="/mnt/floppy/nvram.md5"
+t="unavailable"
+if [ -e $h ]; then
+ o=`cat $h`
+else 
+ o=$t
+fi			
+echo
+echo
+echo "Old NVRAM hash was $o, "
+echo "Current NVRAM hash is $b"
+if  [ "$o" != "$b" ] ; then
+ if [ "$o" != "$t" ] ; then
+	echo "Eeeek, the NVRAM hash has changed.  Either this is a new machine"
+	echo "Or your PC could be infected. Press enter to back up the new "
+	echo "NVRAM hash and continue booting"
+	read f
+  fi
+echo $b > $h 
+fi
+
+echo 
+echo 
+echo
+echo "Type \"menu\" to start "
+echo

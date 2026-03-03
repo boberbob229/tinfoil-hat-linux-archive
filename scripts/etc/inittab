@@ -1,0 +1,6 @@
+::sysinit:/etc/rcS
+::respawn:-/bin/sh
+tty2::askfirst:-/usr/bin/sh
+tty3::askfirst:-/usr/bin/sh
+::ctrlaltdel:/bin/backup
+

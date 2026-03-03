@@ -1,0 +1,2 @@
+#!/bin/sh
+/bin/text2morse - | /bin/blinker - -cd 80

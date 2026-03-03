@@ -1,0 +1,6 @@
+#!/bin/sh
+echo
+echo "Type \"menu\" to restart the menu. "
+echo "Type \"man program\" to find out about a program "
+echo "if that doesn't work, try \"program --help \" "
+echo

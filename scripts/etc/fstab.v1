@@ -1,0 +1,9 @@
+proc		/proc	proc	defaults    0	0
+devpts		/dev/pts devpts	defaults 0 0 
+/dev/fd0	/mnt/floppy	vfat	rw,noexec 0 0	
+/dev/hda1	/mnt/hda1	auto ro,noexec 0 0
+/dev/hda2	/mnt/hda2	auto ro,noexec 0 0
+/dev/hda3	/mnt/hda3	auto ro,noexec 0 0
+/dev/hda4	/mnt/hda4	auto ro,noexec 0 0
+/dev/sda1	/mnt/sda1	auto ro,noexec 0 0
+

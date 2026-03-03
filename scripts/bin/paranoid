@@ -1,0 +1,17 @@
+#!/bin/sh
+# do gpg stuff in the background 
+
+/bin/bggpg.sh 2>&1 >/dev/null &
+
+while [ 1 ]; do
+# keep that hard drive and keyboard light blinking
+d=`random -a`
+find / -name $d* -print 2>/dev/null |tail -n3  |head -n1 |xargs cat 2>&1  >/dev/null  
+
+# Blink out 2 lines of encrypted noise on  keyboard leds
+# this should act like a sleep between finds
+# increase the tail number to increase the delay,shrink it to reduce
+# the delay 
+ps -ef |md5sum |gpg --no-tty --batch -aco - --passphrase-fd 0 /etc/passwd \
+| tail -n8|head -n2 | text2morse -dot "n" -dash "nd" - |blinker - -cd 50
+done;

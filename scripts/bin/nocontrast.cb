@@ -1,0 +1,12 @@
+#!/bin/ctheme
+fblend 0 128 000000 808080
+blend 7 128 FFFFFF 808080
+set {
+	0 877373
+	7 738787
+} 
+end
+
+This contrast is probably easy to pick up electronically, 
+but it makes it hard to photograph the screen. 
+

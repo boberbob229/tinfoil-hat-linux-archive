@@ -1,0 +1,33 @@
+#!/bin/sh
+
+echo "searching for encrypted home directories "
+echo "this may take a while to scan the whole disk"
+for d in `ls /mnt/` ; do
+  find /mnt/$d/*knoppix.img >>/tmp/klist
+done
+
+if [ -s /tmp/klist ]; then
+for c in `cat /tmp/klist`; do
+ if [ -f $c]; then
+ echo "Found a  knoppix home directory in $c"
+ echo "Should I attempt to mount it? This will involve"
+ echo "remounting your hard drive and knoppix directory as read/write"
+ echo "without *any* safety checks or fsck"
+ echo "This could easily damage data on your disk"
+ echo "Press y to contine or N to do the safe thing."
+ read m
+   if [ "$m" = "y" ]; then
+   d=`echo $c |cut -f3 -d\/`
+   mount -o remount,rw /mnt/$d
+   mount -o loop,encryption=AES256,exec  $c /home/knoppix
+  echo "Now starting a shell as user knoppix, type exit to return to root "
+  su knoppix
+  /bin/sh
+   fi
+ fi
+done
+else
+  echo
+  echo "I could not find a knoppix.img file on any mounted drive"
+  echo "You may need to remount hard drives or USB tokens"
+fi

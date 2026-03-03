@@ -1,0 +1,76 @@
+
+	Welcome to Tinfoil Hat Linux (THL)
+   An exercise in paranoia or a day to day tool. 
+
+The purpose of this distribution is to have a safe 
+location to encrypt and sign documents using Gnu Privacy Guard. 
+
+You may want to Tinfoil Hat Linux when ....
+*****************************************************
+   * You're using a computer that could have a keystroke logger installed. 
+www.keyghost.com is an example of a tiny & cheap hardware loggers. 
+There are smaller & cheaper ones out there, and they're all hard to notice. 
+Look for them the next time you're using a public terminal at a convention 
+or hosting facility. 
+   * Using your personal GPG keys at work, school or a web cafe where
+ you don't trust or own the equipment. 
+   * If you maintain a PGP Certificate Authority and have to have a safe
+ place to use the CA key. 
+   * If you're with witness.org &/or have to hide the very fact 
+ that you have PGP. 
+   * If you simply don't want to risk putting a PGP key on a hard drive
+ where someone else might have access to it. 
+
+What Tinfoil Hat Linux protects against ....
+***************************************************
+* Worms & viruses
+The OS doesn't support networking, all binaries are compiled staticly, 
+and all non-root partitions are mounted with no-execute permissions. 
+A hash of the NVRAM is displayed at boot time. 
+
+* Data retrieval
+All temporary files are created on an encrypted ramdisk which is destroyed on
+shutdown. The GPG keyfile information can be stored as an encrypted archive
+on the floppy.   
+
+* Keystroke monitoring. 
+THL has gpggrid , a wrapper for GPG that lets you use a video game style 
+character entry system instead of typing in your passphrase. Keystroke 
+loggers get a random set of grid points, not your passphrase. 
+
+* Power usage & other side channels. 
+If you start the Paranoid options,  a copy of GPG runs in the background
+generating keys & encrypting random documents. This makes it harder to 
+determine When your REAL encryption is taking place. See the TEMPEST section
+below.
+
+* (some) User stupidity. 
+If you use THL, it's very difficult to leave a plaintext file on your
+hard drive by accident. 
+
+Stuff to worry about...
+**********************************************
+* Tempest & EMSEC
+** CRT: THL uses ctheme to manipulates the VGA console palette. It's an 
+amusing hack, and does make it harder to photograph the screen with a
+digital camera, but it won't complicate tempest observation.  It's the 
+best I could figure out without having greyscale fonts. 
+
+In order to complicate listening to radiation from the keyboard, THL blinks
+encrypted messages in morse code on the keyboard LEDs. (you can also use these 
+programs to display messages without the CRT. ) 
+
+** USB: USB support increases the entropy, and it's currently harder to 
+put a sniffer on a USB keyboard. But USB cables are usually long & not well
+ shielded , so they may be good antennas. 
+
+* Entropy. 
+The real problem with a embedded system like this is coming up with 
+enough entropy. Using a noisy diode/geiger counter on the serial port
+would be nice.  Paranoid mode helps a lot. 
+
+* Source code
+The Readme file on the floppy disk describes the compile options & where 
+the source code was found. It's all open source. 
+
+

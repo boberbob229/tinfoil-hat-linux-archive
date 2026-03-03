@@ -1,0 +1,172 @@
+#!/bin/sh
+cd /tmp
+
+cat << EOF
+
+Welcome to Tinfoil Hat Linux 
+     Main Menu:
+
+0) turn 0n paran0id settings 
+m) read the Manual for GPG, wipe, THL
+f) switch to a new Floppy disk
+e) start a text Editor
+p) use GPG with gpggrid secure Passphrase entry tool. 
+g) start using Gnu Privacy Guard
+w) Wipe (erase) a floppy, hard disk or file. 
+s) Shutdown the computer (first backing up keys and entropy to floppy) 
+x) eXit to shell 
+
+EOF
+read menu
+echo 
+
+case "$menu" in
+ x) cat <<EF
+  
+	Type "menu" to restart the menu. 
+EF
+  exit
+;;
+
+ s) echo "Shutting down computer"
+   exec backup;
+;;
+ 0) cat <<EOF
+
+ This command starts several programs that will make it harder for the
+  black helicopters to eavesdrop on the electric emanations from your
+ computer. One copy of GPG will constantly run in the background, 
+ searching for files  and encrypting the contents of your ram disk. 
+ This will increase the background noise on your hard
+ drive controller, CPU usage, and power consumption. All of this makes it
+ harder to detect when you are encrypting files. 
+ To inconvenience Van Eck phreakers listening to your keyboard, random
+ messages in morse code are blinked out on the numlocklights. 
+(look at morseblink if you want to use morse output yourself) 
+ Finally, we run a program that drops screen contrast so that it
+ is harder to photograph or shoulder surf the screen. 
+
+  Press y to start the background processes, any other key to skip it
+EOF
+ read m
+ if [ "$m" = "y" ]; then 
+ /bin/nocontrast.cb
+ /bin/paranoid 2>&1 >/dev/null &
+ fi
+ exec menu
+;;
+
+ e) cat << EOF 
+   Choose a text editor: 
+   v) VI ( for unix heads only )
+   n) nano ( a fairly user friendly editor)  
+EOF
+  read menu
+  if [ "$menu" = "v" ]; then
+	vi /tmp/file_$$.txt
+	exec menu
+  else 
+	nano /tmp/file_$$.txt
+	exec menu
+  fi
+;;
+ p) cat <<EF
+ If someone is using a hardware keystroke logger on this computer, they
+ will capture your passphrase when you type it in.  Instead you can 
+use the gpggrid tool, which lets you enter in your passphrase without
+typing it.  With GPGgrid, you select the passphrase letter by letter
+from a grid (like in a video game) . The grid changes for every
+character, so  the keystroke log is useless. 
+  This tool WILL NOT WORK if your passphrase has non ASCII letters. 
+ 
+ To use GPGgrid , substitute gpggrid for gpg on the command line: 
+	eg: gpggrid --encrypt -a -r me@example.org
+
+ 
+  Press any key to enter the shell (type exit to return to menu)
+EF
+read m
+   /bin/sh
+   exec menu
+;;
+ g) cat <<EF
+   You will now be dropped to a unix shell so that you can run
+   GPG. When you are finished using GPG, type "exit". 
+   
+   If you aren't used to unix, remember to type "ls" instead of "dir"
+   "cp" instead of "copy" and "cd" to change directory. 
+   To copy a file from floppy to this ramdisk try
+	cp /mnt/floppy/filename /tmp/filename
+   To look for a file on your hard drive, try
+	cd /mnt/hda1
+	ls
+
+   Press any key to enter the shell (type exit to return)
+EF
+read m
+   /bin/sh
+   exec menu
+;;
+ w) cat <<EF
+  This floppy includes the Wipe program, which securely erases
+  files or hard drives by overwriting them with many passes of 
+  random gibberish. 
+  
+  To wipe a file, type "wipe filename"
+  To wipe a floppy, type "wipe -D /dev/fd0"
+  To wipe your primary hard drive, type "wipe -D /dev/hda"
+  To get help for  the manual for the wipe program, type "wipe --help"
+
+   Press any key to enter a unix shell where you can run wipe commands.
+   Type "exit" to return to this menu. 
+EF
+read m
+   /bin/sh
+   exec menu
+;;
+
+ m) cat << EF
+
+	Which manual do you want to read?
+ 1) GPG 2) Wipe 3) Tinfoil Hat Linux 4) morseblink
+
+EF
+ read m
+ case "$m" in 
+  1) man gpg ;;
+  2) man wipe;;
+  3) man thl ;;
+  4) man morseblink ;;
+ esac 
+  exec menu
+;;
+
+ f) cat << EF
+  
+  Unlike DOS or Windows, this version of Linux won't automatically work
+  if you take out a floppy & put in a new one. You must run this program
+  every time you want to switch the floppy. 
+
+  Disconnecting from current floppy ...
+    I will say when it's safe to take the floppy  out... 
+EF
+  umount /dev/fd0
+ if [ $? -ne 0 ] ; then
+	echo "error removing floppy. Are you still using a file on that floppy?"
+ else  
+  echo "You can eject the old floppy now "
+  echo "Press Enter  when you have inserted the new floppy"
+  read m
+  mount /dev/fd0
+  echo "OK, new floppy should be available at /mnt/floppy " 
+ fi
+  echo "Press  Enter to continue"
+  exec menu
+;;
+ *) 
+  clear
+  exec /bin/menu
+;;
+
+esac
+

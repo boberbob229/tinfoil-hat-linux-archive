@@ -1,0 +1,90 @@
+#!/bin/sh
+ea="/proc/sys/kernel/random/entropy_avail"
+
+cd /tmp
+if ! [ -f /mnt/floppy/bzImage ];
+then
+ cat << EOF
+Whoops, the boot floppy isn't in the drive
+Type "y" to back up to this floppy, or any other key
+to go back to the main menu, where you can switch floppies. 
+
+EOF
+ read m
+ if [ "$m" != "y" ]; then 
+	exec /bin/menu
+ fi
+fi
+
+cat << EOF
+How do you want to back up your PGP information to 
+ the floppy disk?
+1) Don't back it up
+2) Save it as an encrypted backup file
+3) Save it in the gnupg directory  (default)
+
+EOF
+read m
+echo
+case $m in 
+ 1)
+echo "OK, not backing up GPG keyring "
+;;
+
+ 2)
+cat << EF
+Backing up gnupg directory as encrypted file on floppy 
+You will be prompted for a new password to encrypt this 
+archive. It shouldn't be the same as your GPG passphrase
+
+EF
+ tar -cf -  ./gnupg | gpg -cz9 -o /mnt/floppy/ring.gpg 
+ echo
+ echo "Type "y" if the the encryption failed, any other key to continue"
+ read m
+ if [ "$m" = "y" ]; then 
+	exec /bin/backup 
+ fi
+
+;;
+
+ *)
+echo "backing up gnupg directory onto floppy "
+mkdir /mnt/floppy/gnupg
+(cd /tmp/gnupg/; tar -cf - . ) |(cd /mnt/floppy/gnupg ; tar -xvf - )
+  echo
+ echo "Type "y" if the the backup failed, any other key to continue   "
+ read m
+ if [ "$m" = "y" ]; then 
+	exec /bin/backup 
+ fi
+;;
+esac
+
+echo "saving system entropy... " 
+C=`cat $ea`
+if [ $C -gt 1024 ] ; then
+ dd if=/dev/urandom of=/mnt/floppy/entropy.img bs=1024 count=1 2>/dev/null
+else
+ dd if=/dev/urandom of=/mnt/floppy/entropy.img bs=$C count=1 2>/dev/null
+fi
+
+echo "ejecting floppy & hard drives ... "
+sync
+cd /
+umount /dev/fd0
+c=`mount |grep -v none  |cut -f1 -d " " |xargs`
+for l in $c 
+do
+  umount $l
+done
+losetup -d /dev/loop3
+freeramdisk /dev/ram1
+
+cat <<EF
+
+Go ahead and turn off the power when you want
+
+EF
+# how to better purge buffers?
+dd if=/dev/random of=/dev/mem  bs=1024
